@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/Mackignacio/file-watcher/issues"
   },
-  "homepage": "https://github.com/Mackignacio/file-watcher#readme"
+  "homepage": "https://github.com/Mackignacio/file-watcher#readme",
+  "dependencies": {
+    "typescript": "^3.8.3"
+  }
 }
