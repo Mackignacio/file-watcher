@@ -1,4 +1,11 @@
-#!/usr/bin/env node
+import cp from "child_process";
+import fs from "fs";
+import path from "path";
+import util from "util";
+import assert from "assert";
+import dashdash from "dashdash";
+import chokidar from "chokidar";
+import chalk from "chalk";
 
 /*
  Another nodemon wannabe
