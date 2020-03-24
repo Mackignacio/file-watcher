@@ -4,7 +4,7 @@
   "description": "NodeJS File Watcher Typescript Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc"
   },
   "repository": {
     "type": "git",
