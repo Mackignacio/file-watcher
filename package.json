@@ -1,0 +1,26 @@
+{
+  "name": "file-watcher",
+  "version": "0.0.0",
+  "description": "NodeJS File Watcher Typescript Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mackignacio/file-watcher.git"
+  },
+  "keywords": [
+    "node",
+    "typescript",
+    "nodemon",
+    "chokidar",
+    "file-watcher"
+  ],
+  "author": "Mark Anthony Ignacio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mackignacio/file-watcher/issues"
+  },
+  "homepage": "https://github.com/Mackignacio/file-watcher#readme"
+}
