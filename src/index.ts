@@ -93,3 +93,7 @@ if (opts.help) {
   console.log("usage: fileWatcher [OPTIONS]\n\n" + "options:\n" + help + "\n\n");
   process.exit(0);
 }
+
+if (opts._args.length > 0) {
+  throw new Error(" => [fileWatcher] => You supplied too many arguments (should be zero) => " + chalk.bgCyan.black.bold(JSON.stringify(opts._args)));
+}
