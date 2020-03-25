@@ -278,8 +278,23 @@ const checkVerbosity = (verbosity: number) => {
     console.log("\n");
     console.log(chalk.green.bold(message));
     console.log(chalk.green(util.inspect(watcherConfig)));
+    return true;
+  }
+  return false;
+};
+
+const checkExclude = (isVerbose: boolean, exclude: string[]) => {
+  if (isVerbose) {
+    console.log("\n", chalk.cyan(" => fileWatcher will ignore paths that match any of the following => "));
+    exclude.forEach(message => {
+      console.log("=> ", chalk.grey(message));
+    });
   }
 };
 
 checkExec(watcherConfig);
-checkVerbosity(watcherConfig.verbosity);
+
+const isVerbose = checkVerbosity(watcherConfig.verbosity);
+const exclude = watcherConfig.exclude.reduce((a: any, b: any) => a.concat(b), []);
+
+checkExclude(isVerbose, exclude);
