@@ -305,3 +305,5 @@ const joined = exclude.join("|");
 const ignored = new RegExp("(" + joined + ")");
 const include = flatten<string>(watcherConfig.include);
 const watcher = chokidar.watch(include, { ignored, persistent: true, ignoreInitial: true });
+
+watcher.once("ready", () => {});
