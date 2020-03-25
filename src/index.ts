@@ -261,3 +261,15 @@ if (watcherConfig.processLogPath) {
     );
   }
 }
+
+const checkExec = (config: any) => {
+  try {
+    if (!fs.statSync(config.exec).isFile()) {
+      throw ' => "exec" option value is not a file';
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+checkExec(watcherConfig);
