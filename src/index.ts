@@ -40,17 +40,17 @@ const options = [
   {
     names: ["restart-upon-change", "restart-upon-changes", "ruc"],
     type: "bool",
-    help: "fileWatcher will restart your process upon file changes.",
+    help: `${appName} will restart your process upon file changes.`,
   },
   {
     names: ["restart-upon-addition", "restart-upon-additions", "rua"],
     type: "bool",
-    help: "fileWatcher will restart your process upon file additions.",
+    help: `${appName} will restart your process upon file additions.`,
   },
   {
     names: ["restart-upon-unlink", "restart-upon-unlinks", "ruu"],
     type: "bool",
-    help: "fileWatcher will restart your process upon file deletions/unlinking.",
+    help: `${appName} will restart your process upon file deletions/unlinking.`,
   },
   {
     names: ["exec"],
