@@ -399,4 +399,12 @@ watcher.once("ready", () => {
   }
 
   const { bool, childProcess, stream: strm } = launch(first, watcherConfig, stream);
+
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", d => {
+    if (String(d).trim() === "rs" && watcherConfig.verbosity > 1) {
+      console.log(' => "rs" captured...');
+    }
+  });
 });
