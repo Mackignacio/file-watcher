@@ -227,3 +227,19 @@ const buildOverrideOptions = (opts: any, rootDir: string) => {
 
 const override = buildOverrideOptions(opts, projectRoot);
 const watcherConfig = Object.assign(defaults, fileWatcherConfig, override);
+
+let success = false;
+
+function getStream(force: boolean) {
+  if (force || success) {
+    return fs.createWriteStream(watcherConfig.processLogPath, { autoClose: true }).once("error", function(err) {
+      console.error("\n");
+      console.error(chalk.red.bold(err.message));
+      console.log(
+        ' => You may have accidentally used a path for "exec" or "processLogPath" that begins with "/" => \n' +
+          ' if your relative path begins with "/" then you should remove that.'
+      );
+      throw err;
+    });
+  }
+}
