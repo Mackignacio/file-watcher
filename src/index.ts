@@ -100,7 +100,7 @@ if (opts._args.length > 0) {
 
 const findSubRoot = (pathStr: string, subPath: string): string => {
   if (subPath === pathStr) {
-    return null;
+    return "";
   } else {
     return findRootDir(subPath);
   }
@@ -246,7 +246,7 @@ const getStream = (config: any, force: boolean = false) => {
   }
 };
 
-let stream: fs.WriteStream;
+let stream: fs.WriteStream | undefined;
 
 if (watcherConfig.processLogPath) {
   try {
