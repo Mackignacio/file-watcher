@@ -408,7 +408,7 @@ const killAndRestart = (
 let first = true;
 
 watcher.once("ready", () => {
-  const { verbosity, restartUponChange } = watcherConfig;
+  const { verbosity, restartUponChange, restartUponAddition } = watcherConfig;
   let count = 0;
 
   if (verbosity > 2) {
@@ -445,6 +445,13 @@ watcher.once("ready", () => {
   if (restartUponChange) {
     watcher.on("change", path => {
       console.log(" => watched file changed => ", path);
+      killAndRestart(childProcess, onClose);
+    });
+  }
+
+  if (restartUponAddition) {
+    watcher.on("add", path => {
+      console.log(" => File within watched path was added => ", path);
       killAndRestart(childProcess, onClose);
     });
   }
