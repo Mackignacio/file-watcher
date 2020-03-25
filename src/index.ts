@@ -230,7 +230,7 @@ const watcherConfig = Object.assign(defaults, fileWatcherConfig, override);
 
 let success = false;
 
-function getStream(force: boolean, config: any) {
+const getStream = (config: any, force: boolean = false) => {
   if (force || success) {
     return fs.createWriteStream(config.processLogPath, { autoClose: true }).once("error", function(err) {
       console.error("\n");
@@ -242,13 +242,13 @@ function getStream(force: boolean, config: any) {
       throw err;
     });
   }
-}
+};
 
 let stream: fs.WriteStream;
 
 if (watcherConfig.processLogPath) {
   try {
-    stream = getStream(true, watcherConfig);
+    stream = getStream(watcherConfig, true);
     success = true;
     if (watcherConfig.verbosity > 1) {
       console.log(" => Your process stdout/stderr will be sent to the log file at path =>", "\n", watcherConfig.processLogPath);
