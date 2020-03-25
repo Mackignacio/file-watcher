@@ -408,7 +408,7 @@ const killAndRestart = (
 let first = true;
 
 watcher.once("ready", () => {
-  const { verbosity, restartUponChange, restartUponAddition } = watcherConfig;
+  const { verbosity, restartUponChange, restartUponAddition, restartUponUnlink } = watcherConfig;
   let count = 0;
 
   if (verbosity > 2) {
@@ -452,6 +452,13 @@ watcher.once("ready", () => {
   if (restartUponAddition) {
     watcher.on("add", path => {
       console.log(" => File within watched path was added => ", path);
+      killAndRestart(childProcess, onClose);
+    });
+  }
+
+  if (restartUponUnlink) {
+    watcher.on("unlink", path => {
+      console.log(" => file within watched path was unlinked => ", path);
       killAndRestart(childProcess, onClose);
     });
   }
