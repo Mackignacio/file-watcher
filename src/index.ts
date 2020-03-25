@@ -294,7 +294,14 @@ const checkExclude = (isVerbose: boolean, exclude: string[]) => {
 
 checkExec(watcherConfig);
 
+const flatten = <T>(array: T[]): T[] => array.reduce((a: any, b: any) => a.concat(b), []);
+
 const isVerbose = checkVerbosity(watcherConfig.verbosity);
-const exclude = watcherConfig.exclude.reduce((a: any, b: any) => a.concat(b), []);
+const exclude = flatten<string>(watcherConfig.exclude);
 
 checkExclude(isVerbose, exclude);
+
+const joined = exclude.join("|");
+const ignored = new RegExp("(" + joined + ")");
+const include = flatten<string>(watcherConfig.include);
+const watcher = chokidar.watch(include, { ignored, persistent: true, ignoreInitial: true });
