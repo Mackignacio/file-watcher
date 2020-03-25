@@ -373,6 +373,8 @@ const childProcessHandler = (childProcess: cp.ChildProcessWithoutNullStreams) =>
   });
 };
 
+let first = true;
+
 watcher.once("ready", () => {
   let count = 0;
 
@@ -391,4 +393,10 @@ watcher.once("ready", () => {
       }
     });
   });
+
+  if (watcherConfig.verbosity > 1) {
+    console.log("\n", " => [fileWatcher] => Total number of watched paths => ", count, "\n");
+  }
+
+  const { bool, childProcess, stream: strm } = launch(first, watcherConfig, stream);
 });
