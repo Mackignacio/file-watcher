@@ -306,4 +306,71 @@ const ignored = new RegExp("(" + joined + ")");
 const include = flatten<string>(watcherConfig.include);
 const watcher = chokidar.watch(include, { ignored, persistent: true, ignoreInitial: true });
 
+const launch = (first: boolean, watcherConfig: any, stream?: fs.WriteStream) => {
+  const { verbosity, exec, processArgs } = watcherConfig;
+  if (first && verbosity > 1) {
+    console.log(chalk.cyan(" => [fileWatcher] => fileWatcher is now starting your process...and will restart " + "your process upon file changes."), "\n");
+    console.log(
+      ' => [fileWatcher] => Your process will be launced with the following command => "' +
+        watcherConfig.exec +
+        " " +
+        watcherConfig.processArgs.join(" ") +
+        '"',
+      "\n"
+    );
+  }
+
+  if (!first) {
+    console.log(chalk.black.bold(" => [fileWatcher] => fileWatcher is re-starting your process..."));
+  }
+
+  stream = getStream(watcherConfig);
+
+  const childProcess: cp.ChildProcessWithoutNullStreams = cp.spawn(exec, processArgs);
+
+  if (verbosity > 1 && first) {
+    console.log(" => [fileWatcher] => Your process is running with pid => ", childProcess.pid);
+  }
+
+  if (verbosity > 1 && first && !stream) {
+    console.log(" => [fileWatcher] => What follows is the stdout/stderr of your process => ", "\n");
+  }
+
+  return { childProcess, stream, bool: false };
+};
+
+const childProcessHandler = (childProcess: cp.ChildProcessWithoutNullStreams) => {
+  childProcess.on("error", (err: any) => {
+    console.log(" => Server error => ", err.stack || err);
+  });
+
+  childProcess.once("close", (code: number) => {
+    if (!childProcess.killed) {
+      console.log(
+        chalk.magenta.bold(` => [fileWatcher] => looks like your process crashed (with code ${code}),\n 
+        ...waiting for file changes before restarting.`)
+      );
+    }
+  });
+
+  childProcess.stdout.setEncoding("utf8");
+  childProcess.stderr.setEncoding("utf8");
+  childProcess.stdout.pipe(stream || process.stdout, { end: true });
+  childProcess.stderr.pipe(stream || process.stderr, { end: true });
+  childProcess.stderr.on("data", d => {
+    if (String(d).match(/error/i)) {
+      const stck = String(d)
+        .split("\n")
+        .filter((s, index) => {
+          return index < 3 || (!String(s).match(/\/node_modules\//) && String(s).match(/\//));
+        });
+      const joined = stck.join("\n");
+      console.error("\n");
+      console.error(chalk.bgRed.white(" => captured stderr from your process => "));
+      console.error(chalk.red.bold(joined));
+      console.log("\n");
+    }
+  });
+};
+
 watcher.once("ready", () => {});
