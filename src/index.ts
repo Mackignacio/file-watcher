@@ -408,9 +408,10 @@ const killAndRestart = (
 let first = true;
 
 watcher.once("ready", () => {
+  const { verbosity, restartUponChange } = watcherConfig;
   let count = 0;
 
-  if (watcherConfig.verbosity > 2) {
+  if (verbosity > 2) {
     console.log("\n", chalk.magenta(` => [${appName}] => watched paths => `));
   }
 
@@ -420,13 +421,13 @@ watcher.once("ready", () => {
     const values = watched[k];
     values.forEach(p => {
       count++;
-      if (watcherConfig.verbosity > 2) {
+      if (verbosity > 2) {
         console.log(chalk.grey(path.resolve(k + "/" + p)));
       }
     });
   });
 
-  if (watcherConfig.verbosity > 1) {
+  if (verbosity > 1) {
     console.log("\n", " => [fileWatcher] => Total number of watched paths => ", count, "\n");
   }
 
@@ -435,9 +436,16 @@ watcher.once("ready", () => {
   process.stdin.resume();
   process.stdin.setEncoding("utf8");
   process.stdin.on("data", d => {
-    if (String(d).trim() === "rs" && watcherConfig.verbosity > 1) {
+    if (String(d).trim() === "rs" && verbosity > 1) {
       console.log(' => "rs" captured...');
       killAndRestart(childProcess, onClose);
     }
   });
+
+  if (restartUponChange) {
+    watcher.on("change", path => {
+      console.log(" => watched file changed => ", path);
+      killAndRestart(childProcess, onClose);
+    });
+  }
 });
