@@ -7,6 +7,8 @@ import dashdash from "dashdash";
 import chokidar from "chokidar";
 import chalk from "chalk";
 
+const appName = "fileWatcher";
+
 const cwd = process.cwd();
 
 const options = [
@@ -78,7 +80,7 @@ const parseOptions = (parser: any) => {
   try {
     return parser.parse(process.argv);
   } catch (e) {
-    console.error("[fileWatcher]: error: %s", e.message);
+    console.error(`[${appName}]: error: %s`, e.message);
     process.exit(1);
   }
 };
