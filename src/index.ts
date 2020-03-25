@@ -9,8 +9,6 @@ import chalk from "chalk";
 
 const appName = "fileWatcher";
 
-const cwd = process.cwd();
-
 const options = [
   {
     name: "version",
@@ -117,3 +115,19 @@ const findRootDir = (pathStr: string) => {
     return findSubRoot(pathStr, subPath);
   }
 };
+
+const cwd = process.cwd();
+
+const checkProjectRoot = (projRoot: any, opts: any) => {
+  if (!projRoot) {
+    throw new Error("Could not find project root given cwd => " + cwd);
+  } else {
+    if (opts.verbosity > 1) {
+      console.log("\n");
+      console.log(chalk.cyan.bold.underline(" => fileWatcher considers the following to be your project root => "), chalk.cyan('"' + projRoot + '"'));
+    }
+  }
+};
+
+const projectRoot = findRootDir(cwd);
+checkProjectRoot(projectRoot, opts);
