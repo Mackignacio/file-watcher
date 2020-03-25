@@ -86,3 +86,10 @@ const parseOptions = (parser: any) => {
 };
 
 const opts = parseOptions(parser);
+
+if (opts.help) {
+  const help = parser.help({ includeEnv: true }).trimRight();
+  console.log("\n");
+  console.log("usage: fileWatcher [OPTIONS]\n\n" + "options:\n" + help + "\n\n");
+  process.exit(0);
+}
