@@ -97,3 +97,23 @@ if (opts.help) {
 if (opts._args.length > 0) {
   throw new Error(" => [fileWatcher] => You supplied too many arguments (should be zero) => " + chalk.bgCyan.black.bold(JSON.stringify(opts._args)));
 }
+
+const findSubRoot = (pathStr: string, subPath: string) => {
+  if (subPath === pathStr) {
+    return null;
+  } else {
+    return findRootDir(subPath);
+  }
+};
+
+const findRootDir = (pathStr: string) => {
+  const possiblePkgDotJsonPath = path.resolve(String(pathStr) + "/package.json");
+
+  try {
+    fs.statSync(possiblePkgDotJsonPath).isFile();
+    return pathStr;
+  } catch (err) {
+    const subPath = path.resolve(String(pathStr) + "/../");
+    return findSubRoot(pathStr, subPath);
+  }
+};
