@@ -230,9 +230,9 @@ const watcherConfig = Object.assign(defaults, fileWatcherConfig, override);
 
 let success = false;
 
-function getStream(force: boolean) {
+function getStream(force: boolean, config: any) {
   if (force || success) {
-    return fs.createWriteStream(watcherConfig.processLogPath, { autoClose: true }).once("error", function(err) {
+    return fs.createWriteStream(config.processLogPath, { autoClose: true }).once("error", function(err) {
       console.error("\n");
       console.error(chalk.red.bold(err.message));
       console.log(
@@ -241,5 +241,23 @@ function getStream(force: boolean) {
       );
       throw err;
     });
+  }
+}
+
+let stream: fs.WriteStream;
+
+if (watcherConfig.processLogPath) {
+  try {
+    stream = getStream(true, watcherConfig);
+    success = true;
+    if (watcherConfig.verbosity > 1) {
+      console.log(" => Your process stdout/stderr will be sent to the log file at path =>", "\n", watcherConfig.processLogPath);
+    }
+  } catch (err) {
+    console.error(err.message);
+    console.log(
+      ' => You may have accidentally used an absolute path for "exec" or "processLogPath",\n' +
+        'if your relative path begins with "/" then you should remove that.'
+    );
   }
 }
