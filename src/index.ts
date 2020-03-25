@@ -373,4 +373,22 @@ const childProcessHandler = (childProcess: cp.ChildProcessWithoutNullStreams) =>
   });
 };
 
-watcher.once("ready", () => {});
+watcher.once("ready", () => {
+  let count = 0;
+
+  if (watcherConfig.verbosity > 2) {
+    console.log("\n", chalk.magenta(` => [${appName}] => watched paths => `));
+  }
+
+  const watched = watcher.getWatched();
+
+  Object.keys(watched).forEach(k => {
+    const values = watched[k];
+    values.forEach(p => {
+      count++;
+      if (watcherConfig.verbosity > 2) {
+        console.log(chalk.grey(path.resolve(k + "/" + p)));
+      }
+    });
+  });
+});
