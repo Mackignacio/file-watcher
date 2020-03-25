@@ -96,7 +96,7 @@ if (opts._args.length > 0) {
   throw new Error(" => [fileWatcher] => You supplied too many arguments (should be zero) => " + chalk.bgCyan.black.bold(JSON.stringify(opts._args)));
 }
 
-const findSubRoot = (pathStr: string, subPath: string) => {
+const findSubRoot = (pathStr: string, subPath: string): string => {
   if (subPath === pathStr) {
     return null;
   } else {
@@ -104,7 +104,7 @@ const findSubRoot = (pathStr: string, subPath: string) => {
   }
 };
 
-const findRootDir = (pathStr: string) => {
+const findRootDir = (pathStr: string): string => {
   const possiblePkgDotJsonPath = path.resolve(String(pathStr) + "/package.json");
 
   try {
@@ -118,7 +118,7 @@ const findRootDir = (pathStr: string) => {
 
 const cwd = process.cwd();
 
-const checkProjectRoot = (projRoot: any, opts: any) => {
+const checkProjectRoot = (projRoot: string, opts: any) => {
   if (!projRoot) {
     throw new Error("Could not find project root given cwd => " + cwd);
   } else {
@@ -131,3 +131,7 @@ const checkProjectRoot = (projRoot: any, opts: any) => {
 
 const projectRoot = findRootDir(cwd);
 checkProjectRoot(projectRoot, opts);
+
+const getAbsolutePath = (pathStr: string, projectRoot: string) => {
+  return path.isAbsolute(pathStr) ? pathStr : path.resolve(projectRoot + "/" + pathStr);
+};
