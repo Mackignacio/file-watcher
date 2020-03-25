@@ -164,3 +164,65 @@ const checkWatcherConfig = (projectRoot: string) => {
 };
 
 const fileWatcherConfig = checkWatcherConfig(projectRoot);
+
+const buildOverrideOptions = (opts: any, rootDir: string) => {
+  let overrideOpts: any;
+  if (opts.exec) {
+    overrideOpts.exec = getAbsolutePath(opts.exec, rootDir);
+  } else if (!fileWatcherConfig.exec) {
+    throw new Error(
+      ' => fileWatcher needs an "exec" file to run!\nYou can specify one with "exec" in your ' +
+        'fileWatcher.conf.js file or you can pass one at the command line with the "--exec" option'
+    );
+  }
+
+  if (opts.process_log_path) {
+    overrideOpts.processLogPath = getAbsolutePath(opts.process_log_path, rootDir);
+  }
+
+  if (opts.signal) {
+    overrideOpts.signal = String(opts.signal).trim();
+    assert(
+      ["SIGINT", "SIGTERM", "SIGKILL"].indexOf(String(overrideOpts.signal).trim()) > -1,
+      ' => Value passed as "signal" ' + 'option needs to be one of {"SIGINT","SIGTERM","SIGKILL"},\nyou passed => "' + overrideOpts.signal + '".'
+    );
+  }
+
+  if (opts.include) {
+    overrideOpts.include = opts.include;
+  }
+
+  if (opts.exclude) {
+    overrideOpts.exclude = opts.exclude;
+  }
+
+  if (opts.process_args) {
+    if (Array.isArray(opts.process_args)) {
+      overrideOpts.processArgs = opts.process_args;
+    } else if (typeof opts.process_args === "string") {
+      overrideOpts.processArgs = String(opts.process_args)
+        .trim()
+        .split(/\s+/);
+    } else {
+      throw new Error(' => "processArgs" needs to be either an array or string.');
+    }
+  }
+
+  if ("restart_upon_change" in opts) {
+    overrideOpts.restartUponChange = opts.restart_upon_change;
+  }
+
+  if ("restart_upon_addition" in opts) {
+    overrideOpts.restartUponAddition = opts.restart_upon_addition;
+  }
+
+  if ("restart_upon_unlink" in opts) {
+    overrideOpts.restartUponUnlink = opts.restart_upon_unlink;
+  }
+
+  if (opts.verbosity) {
+    overrideOpts.verbosity = opts.verbosity;
+  }
+};
+
+const override = buildOverrideOptions(opts, projectRoot);
