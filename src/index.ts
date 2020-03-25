@@ -226,3 +226,4 @@ const buildOverrideOptions = (opts: any, rootDir: string) => {
 };
 
 const override = buildOverrideOptions(opts, projectRoot);
+const watcherConfig = Object.assign(defaults, fileWatcherConfig, override);
