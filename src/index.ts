@@ -373,6 +373,38 @@ const childProcessHandler = (childProcess: cp.ChildProcessWithoutNullStreams) =>
   });
 };
 
+const onClose = (cp: cp.ChildProcessWithoutNullStreams, timer?: NodeJS.Timeout) => {
+  return () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    cp.removeAllListeners();
+    cp.unref();
+
+    setTimeout(() => {
+      const { childProcess } = launch(true, watcherConfig);
+      if (watcherConfig.verbosity > 1) {
+        console.log(" => [fileWatcher] Process restarted, new process pid => ", childProcess.pid);
+      }
+    }, 250);
+  };
+};
+
+const killAndRestart = (
+  childProcess: cp.ChildProcessWithoutNullStreams,
+  onClose: (cp: cp.ChildProcessWithoutNullStreams, timer?: NodeJS.Timeout) => () => void
+) => {
+  let timer = setTimeout(onClose(childProcess), 500);
+  childProcess.once("close", onClose(childProcess, timer));
+
+  if (watcherConfig.verbosity > 2) {
+    console.log(' => Killing your process with the "' + watcherConfig.signal + '" signal.');
+  }
+
+  childProcess.kill(watcherConfig.signal);
+};
+
 let first = true;
 
 watcher.once("ready", () => {
@@ -405,6 +437,7 @@ watcher.once("ready", () => {
   process.stdin.on("data", d => {
     if (String(d).trim() === "rs" && watcherConfig.verbosity > 1) {
       console.log(' => "rs" captured...');
+      killAndRestart(childProcess, onClose);
     }
   });
 });
