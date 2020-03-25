@@ -13,63 +13,63 @@ const options = [
   {
     name: "version",
     type: "bool",
-    help: "Print tool version and exit.",
+    help: "Print tool version and exit."
   },
   {
     names: ["help", "h"],
     type: "bool",
-    help: "Print the help information and exit.",
+    help: "Print the help information and exit."
   },
   {
     names: ["verbosity", "v"],
     type: "integer",
-    help: "Verbosity level => {1, 2, or 3}; the higher, the more verbose; default is 2.",
+    help: "Verbosity level => {1, 2, or 3}; the higher, the more verbose; default is 2."
   },
   {
     names: ["process-args"],
     type: "string",
-    help: "These args are directly passed to your running process, your should surround with quotes like so: " + '--process-args="--foo bar --baz bam".',
+    help: "These args are directly passed to your running process, your should surround with quotes like so: " + '--process-args="--foo bar --baz bam".'
   },
   {
     names: ["process-log-path", "log"],
     type: "string",
-    help: "Instead of logging your process stdout/stderr to the terminal, it will send stdout/stderr to this log file.",
+    help: "Instead of logging your process stdout/stderr to the terminal, it will send stdout/stderr to this log file."
   },
   {
     names: ["restart-upon-change", "restart-upon-changes", "ruc"],
     type: "bool",
-    help: `${appName} will restart your process upon file changes.`,
+    help: `${appName} will restart your process upon file changes.`
   },
   {
     names: ["restart-upon-addition", "restart-upon-additions", "rua"],
     type: "bool",
-    help: `${appName} will restart your process upon file additions.`,
+    help: `${appName} will restart your process upon file additions.`
   },
   {
     names: ["restart-upon-unlink", "restart-upon-unlinks", "ruu"],
     type: "bool",
-    help: `${appName} will restart your process upon file deletions/unlinking.`,
+    help: `${appName} will restart your process upon file deletions/unlinking.`
   },
   {
     names: ["exec"],
     type: "string",
-    help: "Relative or absolute path of the file you wish to execute (and re-execute on changes).",
+    help: "Relative or absolute path of the file you wish to execute (and re-execute on changes)."
   },
   {
     names: ["include"],
     type: "arrayOfString",
-    help: "Include these paths (array of regex and/or strings).",
+    help: "Include these paths (array of regex and/or strings)."
   },
   {
     names: ["exclude"],
     type: "arrayOfString",
-    help: "Exclude these paths (array of regex and/or strings).",
+    help: "Exclude these paths (array of regex and/or strings)."
   },
   {
     names: ["signal", "s"],
     type: "string",
-    help: 'The --signal option is one of {"SIGINT","SIGTERM","SIGKILL"}.',
-  },
+    help: 'The --signal option is one of {"SIGINT","SIGTERM","SIGKILL"}.'
+  }
 ];
 
 const parser = dashdash.createParser({ options: options });
@@ -144,7 +144,7 @@ const defaults = {
   restartUponAddition: false,
   restartUponUnlink: false,
   include: projectRoot,
-  exclude: [/node_modules/, /public/, /bower_components/, /.git/, /.idea/, /package.json/, /test/],
+  exclude: [/node_modules/, /public/, /bower_components/, /.git/, /.idea/, /package.json/, /test/]
 };
 
 const checkWatcherConfig = (projectRoot: string) => {
@@ -272,4 +272,14 @@ const checkExec = (config: any) => {
   }
 };
 
+const checkVerbosity = (verbosity: number) => {
+  if (verbosity > 1) {
+    const message = `=> Here is your combined fileWatcher configuration given (1) fileWatcher defaults (2) fileWatcher.conf.js and (3) your command line arguments => `;
+    console.log("\n");
+    console.log(chalk.green.bold(message));
+    console.log(chalk.green(util.inspect(watcherConfig)));
+  }
+};
+
 checkExec(watcherConfig);
+checkVerbosity(watcherConfig.verbosity);
