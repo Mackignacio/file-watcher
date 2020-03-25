@@ -132,7 +132,7 @@ const checkProjectRoot = (projRoot: string, opts: any) => {
 const projectRoot = findRootDir(cwd);
 checkProjectRoot(projectRoot, opts);
 
-const getAbsolutePath = (pathStr: string, projectRoot: string) => {
+const getAbsolutePath = (pathStr: string, projectRoot: string): string => {
   return path.isAbsolute(pathStr) ? pathStr : path.resolve(projectRoot + "/" + pathStr);
 };
 
@@ -146,3 +146,21 @@ const defaults = {
   include: projectRoot,
   exclude: [/node_modules/, /public/, /bower_components/, /.git/, /.idea/, /package.json/, /test/],
 };
+
+const checkWatcherConfig = (projectRoot: string) => {
+  try {
+    const watcherConfig = require(projectRoot + "/fileWatcher.conf.js");
+    if (watcherConfig.processLogPath) {
+      watcherConfig.processLogPath = getAbsolutePath(watcherConfig.processLogPath, projectRoot);
+    }
+
+    if (watcherConfig.exec) {
+      watcherConfig.exec = getAbsolutePath(watcherConfig.exec, projectRoot);
+    }
+    return watcherConfig;
+  } catch (err) {
+    return {};
+  }
+};
+
+const fileWatcherConfig = checkWatcherConfig(projectRoot);
