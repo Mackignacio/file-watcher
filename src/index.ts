@@ -135,3 +135,14 @@ checkProjectRoot(projectRoot, opts);
 const getAbsolutePath = (pathStr: string, projectRoot: string) => {
   return path.isAbsolute(pathStr) ? pathStr : path.resolve(projectRoot + "/" + pathStr);
 };
+
+const defaults = {
+  verbosity: 2,
+  signal: "SIGKILL",
+  processArgs: [],
+  restartUponChange: true,
+  restartUponAddition: false,
+  restartUponUnlink: false,
+  include: projectRoot,
+  exclude: [/node_modules/, /public/, /bower_components/, /.git/, /.idea/, /package.json/, /test/],
+};
